@@ -9,7 +9,7 @@ var modhash = window.reddit.modhash;
 var timeSinceLastRetrieval = 5000;
 var index = 0;
 var sec = 0;
-var currentVersion = 5;
+var currentVersion = 6;
 
 const colorScheme = {
 	"wit": 0,
@@ -49,7 +49,6 @@ function replaceTextWithNumbers(){
 
 function retrieveAndDraw(doDraw) {
 
-	if (timeSinceLastRetrieval > 250) {
 		// retrieve data
 		const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json';
 
@@ -72,14 +71,12 @@ function retrieveAndDraw(doDraw) {
 			replaceTextWithNumbers();
 
 			if (doDraw) draw(0);
+
 		})
 		.catch(function(error) {
 			console.log(error);
 			setTimeout(() => retrieveAndDraw(doDraw), 10 * 1e3);
 		});
-	}  else {
-		if (doDraw) draw(0);
-	}
 }
 
 function draw(seconds) {
