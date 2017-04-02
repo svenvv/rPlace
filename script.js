@@ -9,7 +9,7 @@ var modhash = window.reddit.modhash;
 var timeSinceLastRetrieval = 5000;
 var index = 0;
 var sec = 0;
-var currentVersion = 5;
+var currentVersion = 6;
 
 const colorScheme = {
 	"wit": 0,
@@ -49,9 +49,8 @@ function replaceTextWithNumbers(){
 
 function retrieveAndDraw(doDraw) {
 
-	if (timeSinceLastRetrieval > 360) {
 		// retrieve data
-		const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json';
+		const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json' + '?no-cache=' + (new Date).getTime();
 
 		//TODO implement random selection of multiple files
 		//better to be handled @ serer
@@ -72,19 +71,18 @@ function retrieveAndDraw(doDraw) {
 			replaceTextWithNumbers();
 
 			if (doDraw) draw(0);
+
 		})
 		.catch(function(error) {
 			console.log(error);
 			setTimeout(() => retrieveAndDraw(doDraw), 10 * 1e3);
 		});
-	}  else {
-		if (doDraw) draw(0);
-	}
 }
 
 function draw(seconds) {
 	if (drawingData.kill) {
-		setTimeout(() => retrieveAndDraw(true), 360 * 1e3);
+		//setTimeout(() => retrieveAndDraw(true), 250 * 1e3);
+		// it's automatically updated every 250 s
 		return;
 	}
 	//retrieveAndDraw(false);
@@ -118,7 +116,7 @@ function draw(seconds) {
                 console.log((ax + ", " + ay) + " worden overgeslagen omdat ze al kloppen!");
                 return draw(1);
             }
-            console.log("Drawing at " + ax + ", " + ay + " (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
+            console.log("Pixel tekenen op locatie " + ax + ", " + ay + " (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
             $.ajax({ url: "https://www.reddit.com/api/place/draw.json", type: "POST",
                 headers: { "x-modhash": modhash }, data: { x: ax, y: ay, color: flagColor }
             })
@@ -139,5 +137,6 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval( () => console.log("Pixel tekenen over " + (sec) + " seconden. Data ophalen " + (timeSinceLastRetrieval > 360 ? "na volgende pixel. " : "over " + (360-timeSinceLastRetrieval) + " seconden!")), 10 * 1e3);
+window.setInterval( () => console.log("Pixel tekenen over " + (sec) + " seconden. Data ophalen " + (timeSinceLastRetrieval > 250 ? "na volgende pixel. " : "over " + (250-timeSinceLastRetrieval) + " seconden!")), 10 * 1e3);
 window.setInterval(() => {sec--;timeSinceLastRetrieval++}, 1e3);
+window.setInterval(() => retrieveAndDraw(false), 250 * 1e3);
