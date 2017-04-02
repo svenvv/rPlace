@@ -139,5 +139,5 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval( () => console.log("Drawing in " + (sec) + " seconds. Retrieval " + (timeSinceLastRetrieval < 0 ? "after next drawing. " : "in " + (360-timeSinceLastRetrieval) + " seconds!")), 10 * 1e3);
+window.setInterval( () => console.log("Drawing in " + (sec) + " seconds. Retrieval " + (timeSinceLastRetrieval > 360 ? "after next drawing. " : "in " + (360-timeSinceLastRetrieval) + " seconds!")), 10 * 1e3);
 window.setInterval(() => {sec--;timeSinceLastRetrieval++}, 1e3);
