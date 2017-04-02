@@ -1,5 +1,5 @@
 var modhash = window.reddit.modhash;
-var currentVersion = 8;
+var currentVersion = 9;
 var drawingData = {
 	startX:50,
 	startY:0,
@@ -41,6 +41,7 @@ function updateGoal() {
 			// script was restarted after kill command
 			setTimeout(checkPixels(), 2000);
 		}
+		drawingData.kill = data.kill;
 		// pick a random x and y out of the drawing data
 		currentY = Math.floor(Math.random() * drawingData.colors.length);
 		currentX = Math.floor(Math.random() * drawingData.colors[currentY].length);
@@ -55,6 +56,7 @@ function updateGoal() {
 function checkPixels() {
 	// killswitch
 	if (drawingData.kill) {
+		console.log("Script is paused. Please standby...");
 		return;
 	}
 	var tempX = currentX;
@@ -97,7 +99,7 @@ function checkPixels() {
 		}
 		var ax = currentX + drawingData.startX;
 		var ay = currentY + drawingData.startY;
-		console.log("Checking pixel at ("+ ax + ", " + ay +"). It should be color: " + drawingData.colors[currentY][currentX] + ". It currently is: " + getTileAt(ax, ay));
+		console.log("Checking pixel at ("+ ax + ", " + ay +"). It should be color: " + getColorName(drawingData.colors[currentY][currentX]) + ". It currently is: " + getColorName(getTileAt(ax, ay)));
 
 		// check for the correct pixels
 		$.get("https://www.reddit.com/api/place/pixel.json?x=" + ax + "&y=" + ay)
@@ -129,7 +131,7 @@ function drawPixel() {
 		var ay = currentY + drawingData.startY;
 		var newColor = drawingData.colors[currentY][currentX];
 		// try to draw
-		console.log("Pixel tekenen op locatie (" + ax + ", " + ay + ") Kleur: "+newColor+" (oud: "+getTileAt(ax, ay) +") (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
+		console.log("Pixel tekenen op locatie (" + ax + ", " + ay + ") Kleur: "+getColorName(newColor)+" (oud: "+getColorName(getTileAt(ax, ay)) +") (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
 		$.ajax({ url: "https://www.reddit.com/api/place/draw.json", type: "POST",
 			headers: { "x-modhash": modhash }, data: { x: ax, y: ay, color: newColor }
 		})
@@ -191,6 +193,32 @@ function getTileAt(x, y) {
 	];
 	var data = document.getElementById("place-canvasse").getContext("2d").getImageData(x, y, 1, 1).data;
 	return colors.findIndex(function(x) {return JSON.stringify(x) == JSON.stringify({r: data[0], g: data[1], b: data[2]});});
+}
+
+function getColorName(id) {
+	if (id < 0 || id > 15) {
+		return "???";
+	}
+	const colorScheme = [
+		"wit",
+		"lgrijs",
+		"dgrijs",
+		"zwart",
+		"roze",
+		"rood",
+		"oranje",
+		"bruin",
+		"geel",
+		"lgroen",
+		"groen",
+		"lblauw",
+		"blauw",
+		"dblauw",
+		"magenta",
+		"paars",
+		"niets",
+	];
+	return colorScheme[id];
 }
 
 start();
