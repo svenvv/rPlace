@@ -1,5 +1,5 @@
 var modhash = window.reddit.modhash;
-var currentVersion = 9;
+var currentVersion = 10;
 var drawingData = {
 	startX:50,
 	startY:0,
@@ -57,6 +57,7 @@ function checkPixels() {
 	// killswitch
 	if (drawingData.kill) {
 		console.log("Script is paused. Please standby...");
+		window.clearInterval(intervalId);
 		return;
 	}
 	var tempX = currentX;
