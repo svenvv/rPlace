@@ -1,5 +1,5 @@
 var modhash = window.reddit.modhash;
-var currentVersion = 7;
+var currentVersion = 8;
 var drawingData = {
 	startX:50,
 	startY:0,
@@ -22,10 +22,10 @@ function start(){
 
 // retrieves target from server
 function updateGoal() {
-	const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json' + '?no-cache=' + (new Date).getTime();
+	const url = 'https://raw.githubusercontent.com/Sadye/rPlace/dev/data.json' + '?no-cache=' + (new Date).getTime();
 	//TODO implement random selection of multiple files
 	//better to be handled @ serer
-		fetch(url)
+	fetch(url)
 	.then((resp) => resp.json())
 	.then(function(data) {
 		// update object that holds drawing data
@@ -57,6 +57,25 @@ function checkPixels() {
 	if (drawingData.kill) {
 		return;
 	}
+	var tempX = currentX;
+	var tempY = currentY;
+	while (getTileAt(currentX + drawingData.startX, currentY + drawingData.startY) == drawingData.colors[currentY][currentX] || drawingData.colors[currentY][currentX] == -1) {
+		currentX++;
+		if (currentX > drawingData.colors[currentY].length - 1) {
+			currentY += 1;
+			currentX = 0;
+		}
+		if (currentY > drawingData.colors.length - 1) {
+			currentY = 0;
+		}
+
+		if (tempX == currentX && tempY == currentY) {
+			// we checked everything, no new tiles
+			// try again in 10 seconds
+			setTimeout( () => checkPixels(), 10);
+			return;
+		}
+	}
 	// remove info message interval
 	window.clearInterval(intervalId);
 	setTimeout( () => {
@@ -78,23 +97,24 @@ function checkPixels() {
 		}
 		var ax = currentX + drawingData.startX;
 		var ay = currentY + drawingData.startY;
-		console.log("Checking pixel at ("+ ax + ", " + ay +"). It should be color: " + drawingData.colors[currentY][currentX]);
+		console.log("Checking pixel at ("+ ax + ", " + ay +"). It should be color: " + drawingData.colors[currentY][currentX] + ". It currently is: " + getTileAt(ax, ay));
 
 		// check for the correct pixels
 		$.get("https://www.reddit.com/api/place/pixel.json?x=" + ax + "&y=" + ay)
-	    .then(res => {
-	    	if (res.color == drawingData.colors[currentY][currentX]) {
+		.then(res => {
+			if (res.color == drawingData.colors[currentY][currentX]) {
 	    		// color correct, so check the next pixel
 	    		currentX++;
 	    		setTimeout( () => checkPixels(), 0);
-				return;
+	    		return;
 	    	} else {
 	    		// color incorrect, so overwrite!
 	    		setTimeout( () => drawPixel(), 0);
-				return;
+	    		return;
 	    	}
 	    }).fail(res => {
-	    	// some error, try again in 10 seconds
+	    	// some error, try another in 10 seconds
+	    	currentX++;
 	    	setTimeout( () => checkPixels(), 10 * 1e3);
 	    	return;
 	    })
@@ -109,11 +129,11 @@ function drawPixel() {
 		var ay = currentY + drawingData.startY;
 		var newColor = drawingData.colors[currentY][currentX];
 		// try to draw
-		console.log("Pixel tekenen op locatie (" + ax + ", " + ay + ") Kleur: "+newColor+" (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
+		console.log("Pixel tekenen op locatie (" + ax + ", " + ay + ") Kleur: "+newColor+" (oud: "+getTileAt(ax, ay) +") (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
 		$.ajax({ url: "https://www.reddit.com/api/place/draw.json", type: "POST",
-            headers: { "x-modhash": modhash }, data: { x: ax, y: ay, color: newColor }
-        })
-        .done( res => {
+			headers: { "x-modhash": modhash }, data: { x: ax, y: ay, color: newColor }
+		})
+		.done( res => {
         	// drawing was succesfull
         	// so try again after cooldown
         	setTimeout(() => {
@@ -129,7 +149,7 @@ function drawPixel() {
         	}, 10 * 1e3)
         	return;
         })
-        .error( res => {
+		.error( res => {
         	// error, cooldown not passed probably
         	// give info message. If we received a cooldown error (status 429)
         	// use that value as the next action, else try again in ten seconds
@@ -148,6 +168,29 @@ function drawPixel() {
         });
 
 	}, 500)
+}
+
+function getTileAt(x, y) {
+	var colors = [
+	{r: 255, g: 255, b: 255},
+	{r: 228, g: 228, b: 228},
+	{r: 136, g: 136, b: 136},
+	{r: 34, g: 34, b: 34},
+	{r: 255, g: 167, b: 209},
+	{r: 229, g: 0, b: 0},
+	{r: 229, g: 149, b: 0},
+	{r: 160, g: 106, b: 66},
+	{r: 229, g: 217, b: 0},
+	{r: 148, g: 224, b: 68},
+	{r: 2, g: 190, b: 1},
+	{r: 0, g: 211, b: 221},
+	{r: 0, g: 131, b: 199},
+	{r: 0, g: 0, b: 234},
+	{r: 207, g: 110, b: 228},
+	{r: 130, g: 0, b: 128}
+	];
+	var data = document.getElementById("place-canvasse").getContext("2d").getImageData(x, y, 1, 1).data;
+	return colors.findIndex(function(x) {return JSON.stringify(x) == JSON.stringify({r: data[0], g: data[1], b: data[2]});});
 }
 
 start();
