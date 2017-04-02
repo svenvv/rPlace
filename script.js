@@ -73,7 +73,8 @@ function checkPixels() {
 		// ignore transparant pixels
 		if (drawingData.colors[currentY][currentX] == -1) {
 			currentX++;
-			return checkPixels();
+			setTimeout( () => checkPixels(), 0);
+			return;
 		}
 		var ax = currentX + drawingData.startX;
 		var ay = currentY + drawingData.startY;
@@ -85,14 +86,17 @@ function checkPixels() {
 	    	if (res.color == drawingData.colors[currentY][currentX]) {
 	    		// color correct, so check the next pixel
 	    		currentX++;
-	    		return checkPixels();
+	    		setTimeout( () => checkPixels(), 0);
+				return;
 	    	} else {
 	    		// color incorrect, so overwrite!
-	    		return drawPixel();
+	    		setTimeout( () => drawPixel(), 0);
+				return;
 	    	}
 	    }).fail(res => {
-	    	// some error, try again in a second
-	    	return checkPixels();
+	    	// some error, try again in 10 seconds
+	    	setTimeout( () => checkPixels(), 10 * 1e3);
+	    	return;
 	    })
 	}, 1000);
 }
