@@ -50,7 +50,7 @@ function replaceTextWithNumbers(){
 function retrieveAndDraw(doDraw) {
 
 		// retrieve data
-		const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json';
+		const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json' + '?no-cache=' + (new Date).getTime();
 
 		//TODO implement random selection of multiple files
 		//better to be handled @ serer
