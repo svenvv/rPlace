@@ -119,7 +119,7 @@ function draw(seconds) {
                 console.log((ax + ", " + ay) + " worden overgeslagen omdat ze al kloppen!");
                 return draw(1);
             }
-            console.log("Drawing at " + ax + ", " + ay + " (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
+            console.log("Pixel tekenen op locatie " + ax + ", " + ay + " (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
             $.ajax({ url: "https://www.reddit.com/api/place/draw.json", type: "POST",
                 headers: { "x-modhash": modhash }, data: { x: ax, y: ay, color: flagColor }
             })
@@ -140,6 +140,6 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval( () => console.log("Drawing in " + (sec) + " seconds. Retrieval " + (timeSinceLastRetrieval > 250 ? "after next drawing. " : "in " + (250-timeSinceLastRetrieval) + " seconds!")), 10 * 1e3);
+window.setInterval( () => console.log("Pixel tekenen over " + (sec) + " seconden. Data ophalen " + (timeSinceLastRetrieval > 250 ? "na volgende pixel. " : "over " + (250-timeSinceLastRetrieval) + " seconden!")), 10 * 1e3);
 window.setInterval(() => {sec--;timeSinceLastRetrieval++}, 1e3);
 window.setInterval(() => retrieveAndDraw(false), 250 * 1e3);
