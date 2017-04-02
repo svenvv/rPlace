@@ -9,7 +9,7 @@ var modhash = window.reddit.modhash;
 var timeSinceLastRetrieval = 5000;
 var index = 0;
 var sec = 0;
-var currentVersion = 4;
+var currentVersion = 5;
 
 const colorScheme = {
 	"wit": 0,
