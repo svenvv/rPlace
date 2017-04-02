@@ -64,7 +64,7 @@ function retrieveAndDraw(doDraw) {
 			drawingData.colors = data.colors;
 
 			if (currentVersion < data.newVersion) {
-				document.write('Je script is verouderd! Please update! <br> <a href="https://discord.gg/EU4NhBn">Discord</a> <a href=http://placenl.zeeuwse.cloud/script.js>Script</a>');
+				document.write('Je script is verouderd! Download alsjeblieft de nieuwe update! <br> <a href="https://discord.gg/EU4NhBn">Discord</a> | <a href=http://placenl.zeeuwse.cloud/script.js>Script</a>');
 			}
 
 			index = Math.floor(Math.random() * (drawingData.colors[0].length * drawingData.colors.length));
@@ -138,4 +138,4 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval(() => console.log("Drawing in " + (sec--) + " seconds. Retrieval " + (timeSinceLastRetrieval < 0 ? "after next drawing. " : "in " + (360-timeSinceLastRetrieval++) + " seconds!")), 1e3);
+window.setInterval(() => console.log("Drawing in " + (sec--) + " seconds. Retrieval " + (timeSinceLastRetrieval < 0 ? " after next drawing. " : "in " + (360-timeSinceLastRetrieval++) + " seconds!")), 1e3);
