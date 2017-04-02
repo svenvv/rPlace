@@ -34,7 +34,7 @@ function updateGoal() {
 		drawingData.colors = data.colors;
 		if (currentVersion < data.newVersion) {
 			// script needs updating
-			document.body.innerHTML = '<center><br><br><h1>Je script is verouderd! Download alsjeblieft de nieuwe update (v' + data.newVersion + '). <br><br><br><br> <a href=https://raw.githubusercontent.com/Sadye/rPlace/master/script.js?nocache>Script</a> | <a href="https://discord.gg/EU4NhBn">Discord</a></h1></center>';
+			document.body.innerHTML = '<center><br><br><h1>Je script is verouderd! Download alsjeblieft de nieuwe update (v' + data.newVersion + '). <br><br><br><br> <a href=https://raw.githubusercontent.com/Sadye/rPlace/master/script.js?no-cache>Script</a> | <a href="https://discord.gg/EU4NhBn">Discord</a></h1></center>';
 			return;
 		}
 		if (drawingData.kill && !data.kill) {
