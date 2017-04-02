@@ -64,7 +64,7 @@ function retrieveAndDraw(doDraw) {
 			drawingData.colors = data.colors;
 
 			if (currentVersion < data.newVersion) {
-				document.body.innerHTML = '<center><br><br><h1>Je script is verouderd! Download alsjeblieft de nieuwe update (v' + data.newVersion + '). <br><br><br><br> <a href=http://placenl.zeeuwse.cloud/script.js>Script</a> | <a href="https://discord.gg/EU4NhBn">Discord</a></h1></center>';
+				document.body.innerHTML = '<center><br><br><h1>Je script is verouderd! Download alsjeblieft de nieuwe update (v' + data.newVersion + '). <br><br><br><br> <a href=https://raw.githubusercontent.com/Sadye/rPlace/master/script.js>Script</a> | <a href="https://discord.gg/EU4NhBn">Discord</a></h1></center>';
 			}
 
 			index = Math.floor(Math.random() * (drawingData.colors[0].length * drawingData.colors.length));
