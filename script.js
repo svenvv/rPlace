@@ -116,7 +116,14 @@ function draw(seconds) {
                 console.log((ax + ", " + ay) + " worden overgeslagen omdat ze al kloppen!");
                 return draw(1);
             }
-            console.log("Pixel tekenen op locatie " + ax + ", " + ay + " (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
+            var color;
+            for (var key in colorScheme) {
+            	if (colorScheme[key] == flagColor) {
+            		color = key;
+            		break;
+            	}
+            }
+            console.log("Pixel tekenen op locatie " + ax + ", " + ay + " ("+color+") (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
             $.ajax({ url: "https://www.reddit.com/api/place/draw.json", type: "POST",
                 headers: { "x-modhash": modhash }, data: { x: ax, y: ay, color: flagColor }
             })
