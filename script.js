@@ -115,7 +115,7 @@ function draw(seconds) {
         .then(res => {
         	console.log(res);
             if (res.color == flagColor) {
-                console.log("Coördinaten " + (ax + ", " + ay) + " overslaan omdat ze al kloppen");
+                console.log((ax + ", " + ay) + " worden overgeslagen omdat ze al kloppen!");
                 return draw(1);
             }
             console.log("Drawing at " + ax + ", " + ay + " (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
@@ -139,5 +139,5 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval( () => console.log("Pixel tekenen in " + (sec) + " seconden. Data ophalen " + (timeSinceLastRetrieval > 360 ? "na volgende pixel. " : "over " + (360-timeSinceLastRetrieval) + " seconden!")), 10 * 1e3);
+window.setInterval( () => console.log("Pixel tekenen over " + (sec) + " seconden. Data ophalen " + (timeSinceLastRetrieval > 360 ? "na volgende pixel. " : "over " + (360-timeSinceLastRetrieval) + " seconden!")), 10 * 1e3);
 window.setInterval(() => {sec--;timeSinceLastRetrieval++}, 1e3);
