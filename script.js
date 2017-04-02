@@ -100,8 +100,8 @@ function checkPixels() {
 		}
 		var ax = currentX + drawingData.startX;
 		var ay = currentY + drawingData.startY;
-		console.log("Checking pixel at ("+ ax + ", " + ay +"). It should be color: " + getColorName(drawingData.colors[currentY][currentX]) + ". It currently is: " + getColorName(getTileAt(ax, ay)));
-
+		console.log("Taking a closer look at the pixel at ("+ ax + ", " + ay +"). It should be color: " + getColorName(drawingData.colors[currentY][currentX]) + ". It currently is: " + getColorName(getTileAt(ax, ay)));
+		console.log("If you see another check below this, it means someone else already fixed the pixel but the canvas has not updated yet!");
 		// check for the correct pixels
 		$.get("https://www.reddit.com/api/place/pixel.json?x=" + ax + "&y=" + ay)
 		.then(res => {
