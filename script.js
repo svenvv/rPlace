@@ -51,7 +51,7 @@ function retrieveAndDraw(doDraw) {
 
 	if (timeSinceLastRetrieval > 360) {
 		// retrieve data
-		const url = 'https://www.basvdwollenberg.nl/place.json';
+		const url = 'https://placenl.basvdwollenberg.nl/data.json';
 
 		//TODO implement random selection of multiple files
 		//better to be handled @ serer
