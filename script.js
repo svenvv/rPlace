@@ -74,7 +74,8 @@ function retrieveAndDraw(doDraw) {
 			if (doDraw) draw(0);
 		})
 		.catch(function(error) {
-			console.log(error);
+			console.log(error)
+			setTimeout(() => retrieveAndDraw(doDraw), 10 * 1e3);
 		});
 	}  else {
 		if (doDraw) draw(0);
@@ -89,7 +90,7 @@ function draw(seconds) {
 	//retrieveAndDraw(false);
 	var width = drawingData.colors[0].length;
 	var height = drawingData.colors.length;
-	index++
+	index++;
     index = index % (width * height);
     sec = seconds = Math.ceil(seconds)
     setTimeout(() => {
