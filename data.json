@@ -3,5 +3,5 @@
 	"startY": 0,
 	"colors": [[-1,5,-1],[5,5,5],[-1,5,-1]],
 	"kill": false,
-	"newVersion": 5
+	"newVersion": 6
 }
