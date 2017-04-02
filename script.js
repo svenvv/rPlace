@@ -9,7 +9,7 @@ var modhash = window.reddit.modhash;
 var timeSinceLastRetrieval = 5000;
 var index = 0;
 var sec = 0;
-var currentVersion = 3;
+var currentVersion = 5;
 
 const colorScheme = {
 	"wit": 0,
@@ -38,7 +38,7 @@ function replaceTextWithNumbers(){
 		var tempx = i % width;
 		var tempy = Math.floor(i / width);
 		console.log(width, height, tempx, tempy, drawingData.colors);
-		for (key in colorScheme) {
+		for (var key in colorScheme) {
 			if (drawingData.colors[tempy][tempx] == key) {
 				drawingData.colors[tempy][tempx] = colorScheme[key];
 				break;
@@ -51,7 +51,7 @@ function retrieveAndDraw(doDraw) {
 
 	if (timeSinceLastRetrieval > 360) {
 		// retrieve data
-		const url = 'https://www.basvdwollenberg.nl/place.json';
+		const url = 'https://placenl.basvdwollenberg.nl/data.json';
 
 		//TODO implement random selection of multiple files
 		//better to be handled @ serer
@@ -74,7 +74,7 @@ function retrieveAndDraw(doDraw) {
 			if (doDraw) draw(0);
 		})
 		.catch(function(error) {
-			console.log(error)
+			console.log(error);
 			setTimeout(() => retrieveAndDraw(doDraw), 10 * 1e3);
 		});
 	}  else {
@@ -91,8 +91,9 @@ function draw(seconds) {
 	var width = drawingData.colors[0].length;
 	var height = drawingData.colors.length;
 	index++;
+	console.log(width, height, index);
     index = index % (width * height);
-    sec = seconds = Math.ceil(seconds)
+    sec = seconds = Math.ceil(seconds);
     setTimeout(() => {
         const x = index % width;
         const y = Math.floor(index / width);
@@ -102,11 +103,11 @@ function draw(seconds) {
         if (flagColor == -1) {
         	return draw(0);
         }
-        const xChange = flagColor != drawingData.colors[y][x - 1] || flagColor != drawingData.colors[y][x + 1];
-        const yChange = (drawingData.colors[y - 1] && flagColor != drawingData.colors[y - 1][x]) || (drawingData.colors[y + 1] && flagColor != drawingData.colors[y + 1][x]);
-        if  (!xChange && !yChange) {
-            return draw(0);
-        }
+        // const xChange = flagColor != drawingData.colors[y][x - 1] || flagColor != drawingData.colors[y][x + 1];
+        // const yChange = (drawingData.colors[y - 1] && flagColor != drawingData.colors[y - 1][x]) || (drawingData.colors[y + 1] && flagColor != drawingData.colors[y + 1][x]);
+        // if  (!xChange && !yChange) {
+        //     return draw(0);
+        // }
         const ax = x + drawingData.startX;
         const ay = y + drawingData.startY;
 
@@ -138,4 +139,5 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval(() => console.log("Drawing in " + (sec--) + " seconds. Retrieval " + (timeSinceLastRetrieval < 0 ? "after next drawing. " : "in " + (360-timeSinceLastRetrieval++) + " seconds!")), 1e3);
+window.setInterval( () => console.log("Drawing in " + (sec) + " seconds. Retrieval " + (timeSinceLastRetrieval > 360 ? "after next drawing. " : "in " + (360-timeSinceLastRetrieval) + " seconds!")), 10 * 1e3);
+window.setInterval(() => {sec--;timeSinceLastRetrieval++}, 1e3);
