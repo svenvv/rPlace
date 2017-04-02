@@ -1,4 +1,5 @@
 # /r/Place
+[![GitHub release](https://img.shields.io/badge/release-6.0-brightgreen.svg?style=flat-square&colorB=E67233)](https://github.com/Sadye/rPlace/releases) [![language](https://img.shields.io/badge/language-javascript-brightgreen.svg?style=flat-square&colorB=ffc107)](https://github.com/Sadye/rPlace/search?l=javascript) ![views](https://img.shields.io/badge/views-500-brightgreen.svg?style=flat-square) [![contributors](https://img.shields.io/github/contributors/Sadye/rPlace.svg?style=flat-square)](https://github.com/MrLuit/CensorRadar/graphs/contributors)
 
 De broncode voor het /r/PlaceNL-script (in javascript).
 
