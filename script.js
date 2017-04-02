@@ -59,7 +59,7 @@ function retrieveAndDraw(doDraw) {
 		.then((resp) => resp.json())
 		.then(function(data) {
 			drawingData.startX = data.startX;
-			drawingData.starty = data.startY;
+			drawingData.startY = data.startY;
 			drawingData.colors = data.colors;
 
 			if (currentVersion < data.newVersion) {
