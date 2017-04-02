@@ -1,5 +1,5 @@
 var modhash = window.reddit.modhash;
-var currentVersion = 10;
+var currentVersion = 11;
 var drawingData = {
 	startX:50,
 	startY:0,
@@ -153,22 +153,29 @@ function drawPixel() {
         	return;
         })
 		.error( res => {
-        	// error, cooldown not passed probably
-        	// give info message. If we received a cooldown error (status 429)
-        	// use that value as the next action, else try again in ten seconds
-        	setTimeout(() => {
-        		checkPixels()
-        	}, Math.max(Math.ceil(res.responseJSON.wait_seconds), 10) * 1e3);
-        	console.log("Probleem! Nieuwe poging over " + Math.max(Math.ceil(res.responseJSON.wait_seconds), 10) + " seconden.");
-        	
-        	// and some info logging to the user
-        	secondsLeft = Math.ceil(res.responseJSON.wait_seconds)
-        	intervalId = setInterval( () => {
-        		secondsLeft -= 10;
-        		console.log("Nog " + secondsLeft + " seconden tot de volgende actie!");
-        	}, 10 * 1e3)
-        	return;
-        });
+			if (res.responseJSON) {
+	        	// error, cooldown not passed probably
+	        	// give info message. If we received a cooldown error (status 429)
+	        	// use that value as the next action, else try again in ten seconds
+	        	setTimeout(() => {
+	        		checkPixels()
+	        	}, Math.max(Math.ceil(res.responseJSON.wait_seconds), 10) * 1e3);
+	        	console.log("Probleem! Nieuwe poging over " + Math.max(Math.ceil(res.responseJSON.wait_seconds), 10) + " seconden.");
+	        	
+	        	// and some info logging to the user
+	        	secondsLeft = Math.ceil(res.responseJSON.wait_seconds)
+	        	intervalId = setInterval( () => {
+	        		secondsLeft -= 10;
+	        		console.log("Nog " + secondsLeft + " seconden tot de volgende actie!");
+	        	}, 10 * 1e3)
+	        } else {
+	        	setTimeout(() => {
+	        		checkPixels()
+	        	}, 10* 1e3);
+	        	console.log("Probleem! Nieuwe poging over " + 10 + " seconden.");
+	        }
+	        return;
+	    });
 
 	}, 500)
 }
@@ -201,23 +208,23 @@ function getColorName(id) {
 		return "???";
 	}
 	const colorScheme = [
-		"wit",
-		"lgrijs",
-		"dgrijs",
-		"zwart",
-		"roze",
-		"rood",
-		"oranje",
-		"bruin",
-		"geel",
-		"lgroen",
-		"groen",
-		"lblauw",
-		"blauw",
-		"dblauw",
-		"magenta",
-		"paars",
-		"niets",
+	"wit",
+	"lgrijs",
+	"dgrijs",
+	"zwart",
+	"roze",
+	"rood",
+	"oranje",
+	"bruin",
+	"geel",
+	"lgroen",
+	"groen",
+	"lblauw",
+	"blauw",
+	"dblauw",
+	"magenta",
+	"paars",
+	"niets",
 	];
 	return colorScheme[id];
 }
