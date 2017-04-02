@@ -9,6 +9,7 @@ var modhash = window.reddit.modhash;
 var timeSinceLastRetrieval = 5000;
 var index = 0;
 var sec = 0;
+var currentVersion = 2;
 
 const colorScheme = {
 	"wit": 0,
@@ -61,6 +62,10 @@ function retrieveAndDraw(doDraw) {
 			drawingData.startX = data.startX;
 			drawingData.starty = data.startY;
 			drawingData.colors = data.colors;
+
+			if (currentVersion < data.newVersion) {
+				document.write('Je script is verouderd! Please update! <br> <a href="https://discord.gg/EU4NhBn">Discord</a> <a href=http://placenl.zeeuwse.cloud/script.js>Script</a>');
+			}
 
 			index = Math.floor(Math.random() * (drawingData[0].length * drawingData.length));
 			timeSinceLastRetrieval = 0;
