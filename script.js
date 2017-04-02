@@ -22,7 +22,7 @@ function start(){
 
 // retrieves target from server
 function updateGoal() {
-	const url = 'https://raw.githubusercontent.com/Sadye/rPlace/dev/data.json' + '?no-cache=' + (new Date).getTime();
+	const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json' + '?no-cache=' + (new Date).getTime();
 	//TODO implement random selection of multiple files
 	//better to be handled @ serer
 	fetch(url)
