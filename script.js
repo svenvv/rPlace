@@ -38,7 +38,7 @@ function replaceTextWithNumbers(){
 		var tempx = i % width;
 		var tempy = Math.floor(i / width);
 		console.log(width, height, tempx, tempy, drawingData.colors);
-		for (key in colorScheme) {
+		for (var key in colorScheme) {
 			if (drawingData.colors[tempy][tempx] == key) {
 				drawingData.colors[tempy][tempx] = colorScheme[key];
 				break;
@@ -74,7 +74,7 @@ function retrieveAndDraw(doDraw) {
 			if (doDraw) draw(0);
 		})
 		.catch(function(error) {
-			console.log(error)
+			console.log(error);
 			setTimeout(() => retrieveAndDraw(doDraw), 10 * 1e3);
 		});
 	}  else {
@@ -93,7 +93,7 @@ function draw(seconds) {
 	index++;
 	console.log(width, height, index);
     index = index % (width * height);
-    sec = seconds = Math.ceil(seconds)
+    sec = seconds = Math.ceil(seconds);
     setTimeout(() => {
         const x = index % width;
         const y = Math.floor(index / width);
