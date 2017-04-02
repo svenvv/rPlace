@@ -9,7 +9,7 @@ var modhash = window.reddit.modhash;
 var timeSinceLastRetrieval = 5000;
 var index = 0;
 var sec = 0;
-var currentVersion = 2;
+var currentVersion = 3;
 
 const colorScheme = {
 	"wit": 0,
@@ -51,7 +51,7 @@ function retrieveAndDraw(doDraw) {
 
 	if (timeSinceLastRetrieval > 360) {
 		// retrieve data
-		const url = 'https://plakbak.nl/raw/KxjaPWoLxb';
+		const url = 'https://www.basvdwollenberg.nl/place.json';
 
 		//TODO implement random selection of multiple files
 		//better to be handled @ serer
@@ -67,7 +67,7 @@ function retrieveAndDraw(doDraw) {
 				document.write('Je script is verouderd! Please update! <br> <a href="https://discord.gg/EU4NhBn">Discord</a> <a href=http://placenl.zeeuwse.cloud/script.js>Script</a>');
 			}
 
-			index = Math.floor(Math.random() * (drawingData[0].length * drawingData.length));
+			index = Math.floor(Math.random() * (drawingData.colors[0].length * drawingData.colors.length));
 			timeSinceLastRetrieval = 0;
 			replaceTextWithNumbers();
 
@@ -137,4 +137,4 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval(() => console.log("Drawing in " + (sec--) + " seconds. Retrieval in " + (360 - (timeSinceLastRetrieval++)) + "seconds!"), 1e3);
+window.setInterval(() => console.log("Drawing in " + (sec--) + " seconds. Retrieval " + (timeSinceLastRetrieval < 0 ? "after next drawing. " : "in " + (360-timeSinceLastRetrieval++) + " seconds!")), 1e3);
