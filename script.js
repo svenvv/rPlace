@@ -49,7 +49,7 @@ function replaceTextWithNumbers(){
 
 function retrieveAndDraw(doDraw) {
 
-	if (timeSinceLastRetrieval > 360) {
+	if (timeSinceLastRetrieval > 250) {
 		// retrieve data
 		const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json';
 
@@ -84,7 +84,8 @@ function retrieveAndDraw(doDraw) {
 
 function draw(seconds) {
 	if (drawingData.kill) {
-		setTimeout(() => retrieveAndDraw(true), 360 * 1e3);
+		//setTimeout(() => retrieveAndDraw(true), 250 * 1e3);
+		// it's automatically updated every 250 s
 		return;
 	}
 	//retrieveAndDraw(false);
@@ -139,5 +140,6 @@ function draw(seconds) {
 
 replaceTextWithNumbers();
 retrieveAndDraw(true);
-window.setInterval( () => console.log("Pixel tekenen over " + (sec) + " seconden. Data ophalen " + (timeSinceLastRetrieval > 360 ? "na volgende pixel. " : "over " + (360-timeSinceLastRetrieval) + " seconden!")), 10 * 1e3);
+window.setInterval( () => console.log("Drawing in " + (sec) + " seconds. Retrieval " + (timeSinceLastRetrieval > 250 ? "after next drawing. " : "in " + (250-timeSinceLastRetrieval) + " seconds!")), 10 * 1e3);
 window.setInterval(() => {sec--;timeSinceLastRetrieval++}, 1e3);
+window.setInterval(() => retrieveAndDraw(false), 250 * 1e3);
