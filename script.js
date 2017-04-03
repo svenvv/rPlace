@@ -196,7 +196,7 @@ function getTileAt(x, y) {
 }
 
 function getColorName(id) {
-	if (id < 0 || id > 15) {
+	if (id < 0 || id > 16) {
 		return "???";
 	}
 	const colorScheme = [
