@@ -20,35 +20,35 @@ function start(){
 	setTimeout(checkPixels(), 2000);
 }
 
-// retrieves target from server
+// Haalt de opdracht op van github
 function updateGoal() {
 	const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json' + '?no-cache=' + (new Date).getTime();
-	//TODO implement random selection of multiple files
-	//better to be handled @ serer
+	//Hier komt later een functie om meerdere opdrachten te kunnen verdelen over gebruikers
 	fetch(url)
 	.then((resp) => resp.json())
 	.then(function(data) {
-		// update object that holds drawing data
+		// Werk de variabele bij die teken-data bjihoud
 		drawingData.startX = data.startX;
 		drawingData.startY = data.startY;
 		drawingData.colors = data.colors;
 		if (currentVersion < data.newVersion) {
-			// script needs updating
-			document.body.innerHTML = '<center><br><br><h1>Je script is verouderd! Download alsjeblieft de nieuwe update (v' + data.newVersion + '). <br><br><br><br> <a href=https://raw.githubusercontent.com/Sadye/rPlace/master/script.js?no-cache>Script</a> | <a href="https://discord.gg/EU4NhBn">Discord</a></h1></center>';
+			// dit moet nog iets beter uitgewerkt worden
+			document.body.innerHTML = '<center><br><br><br><br><br><br><h1 style="font-size: 20pt;">Je script is verouderd! Download alsjeblieft de nieuwe update (v' + data.newVersion + '). <br><br><br><br> <a href=https://raw.githubusercontent.com/Sadye/rPlace/master/script.js>Script</a> | <a target="_blank" href="https://discord.gg/EU4NhBn">Discord</a> | <a target="_blank" href="https://github.com/Sadye/rPlace">Github</a></h1></center>';
+			alert('Nieuwe update beschikbaar!');
 			return;
 		}
 		if (drawingData.kill && !data.kill) {
-			// script was restarted after kill command
+			// Script moet weer uitgevoerd worden nadat de killswitch was uitgevoerd
 			setTimeout(checkPixels(), 2000);
 		}
 		drawingData.kill = data.kill;
-		// pick a random x and y out of the drawing data
+		// Neem een willekeurige x en y uit de teken-data
 		currentY = Math.floor(Math.random() * drawingData.colors.length);
 		currentX = Math.floor(Math.random() * drawingData.colors[currentY].length);
 	})
 	.catch(function(error) {
 		console.log(error);
-		console.log("Retrying: ");
+		console.log("Opnieuw proberen: ");
 		setTimeout(() => updateGoal(), 5000);
 	});
 }
@@ -56,7 +56,7 @@ function updateGoal() {
 function checkPixels() {
 	// killswitch
 	if (drawingData.kill) {
-		console.log("Script is paused. Please standby...");
+		console.log("Script is gepauzeerd...");
 		window.clearInterval(intervalId);
 		return;
 	}
@@ -73,8 +73,8 @@ function checkPixels() {
 		}
 
 		if (tempX == currentX && tempY == currentY) {
-			// we checked everything, no new tiles
-			// try again in 10 seconds
+			// Alles is gecontroleerd, geen nieuwe pixels
+			// Probeer opnieuw in 10s
 			setTimeout( () => checkPixels(), 10);
 			return;
 		}
@@ -82,9 +82,9 @@ function checkPixels() {
 	// remove info message interval
 	window.clearInterval(intervalId);
 	setTimeout( () => {
-		// after a second, check a new pixel
-		// automatically wrap around to the next line, or back to the start
-		// if we go out of bounds
+		// probeer nieuwe pixel na 1 seconde
+		// ga automatisch naar volgende regel of terug naar start
+		// als we buiten het canvas komen
 		if (currentX > drawingData.colors[currentY].length - 1) {
 			currentY += 1;
 			currentX = 0;
@@ -92,7 +92,7 @@ function checkPixels() {
 		if (currentY > drawingData.colors.length - 1) {
 			currentY = 0;
 		}
-		// ignore transparant pixels
+		// negeer transparente pixels
 		if (drawingData.colors[currentY][currentX] == -1) {
 			currentX++;
 			setTimeout( () => checkPixels(), 0);
@@ -100,23 +100,23 @@ function checkPixels() {
 		}
 		var ax = currentX + drawingData.startX;
 		var ay = currentY + drawingData.startY;
-		console.log("Taking a closer look at the pixel at ("+ ax + ", " + ay +"). It should be color: " + getColorName(drawingData.colors[currentY][currentX]) + ". It currently is: " + getColorName(getTileAt(ax, ay)));
-		console.log("If you see another check below this, it means someone else already fixed the pixel but the canvas has not updated yet!");
-		// check for the correct pixels
+		console.log("Aan het kijken naar de pixel op ("+ ax + ", " + ay +"). Het zou: " + getColorName(drawingData.colors[currentY][currentX]) + " moeten zijn. Het is momenteel: " + getColorName(getTileAt(ax, ay)));
+		console.log("Als je hieronder nog een check ziet, betekent het dat iemand anders de pixel al verbeterd heeft maar het canvas nog niet bijgewerkt is.");
+		// zoek naar de correcte kleur
 		$.get("https://www.reddit.com/api/place/pixel.json?x=" + ax + "&y=" + ay)
 		.then(res => {
 			if (res.color == drawingData.colors[currentY][currentX]) {
-	    		// color correct, so check the next pixel
+	    		// kleur klopt, controleer volgende pixel
 	    		currentX++;
 	    		setTimeout( () => checkPixels(), 0);
 	    		return;
 	    	} else {
-	    		// color incorrect, so overwrite!
+	    		// kleur is fout, kleur wordt vervangen
 	    		setTimeout( () => drawPixel(), 0);
 	    		return;
 	    	}
 	    }).fail(res => {
-	    	// some error, try another in 10 seconds
+	    	// een error, probeer opnieuw over 10s
 	    	currentX++;
 	    	setTimeout( () => checkPixels(), 10 * 1e3);
 	    	return;
@@ -124,27 +124,27 @@ function checkPixels() {
 	}, 1000);
 }
 
-// draws a pixel
+// tekent een pixel
 function drawPixel() {
 	setTimeout( () => {
-		// calculate correct x, y, color
+		// bereken de x, y , kleur
 		var ax = currentX + drawingData.startX;
 		var ay = currentY + drawingData.startY;
 		var newColor = drawingData.colors[currentY][currentX];
-		// try to draw
+		// probeer het tekenen
 		console.log("Pixel tekenen op locatie (" + ax + ", " + ay + ") Kleur: "+getColorName(newColor)+" (oud: "+getColorName(getTileAt(ax, ay)) +") (https://www.reddit.com/r/place/#x=" + ax + "&y=" + ay + ")");
 		$.ajax({ url: "https://www.reddit.com/api/place/draw.json", type: "POST",
 			headers: { "x-modhash": modhash }, data: { x: ax, y: ay, color: newColor }
 		})
 		.done( res => {
-        	// drawing was succesfull
-        	// so try again after cooldown
+        	// tekenen is gelukt
+        	// opnieuw proberen na 10s
         	setTimeout(() => {
         		checkPixels()
         	}, res.wait_seconds * 1e3)
         	console.log("Succes! Nieuwe poging over " + res.wait_seconds + " seconden.");
 
-        	// and show an info message so people know it's still working
+        	// laat mensen weten dat het nog werkt
         	secondsLeft = res.wait_seconds;
         	intervalId = setInterval( () => {
         		secondsLeft -= 10;
@@ -154,15 +154,15 @@ function drawPixel() {
         })
 		.error( res => {
 			if (res.responseJSON) {
-	        	// error, cooldown not passed probably
-	        	// give info message. If we received a cooldown error (status 429)
-	        	// use that value as the next action, else try again in ten seconds
+	        	// De aftelfunctie is niet gelukt
+	        	// Geef error-melding. Als er een http-error is (status 429)
+	        	// gebruik dan die waarde voor de volgende actie, anders opnieuw proberen in 10s
 	        	setTimeout(() => {
 	        		checkPixels()
 	        	}, Math.max(Math.ceil(res.responseJSON.wait_seconds), 10) * 1e3);
 	        	console.log("Probleem! Nieuwe poging over " + Math.max(Math.ceil(res.responseJSON.wait_seconds), 10) + " seconden.");
 	        	
-	        	// and some info logging to the user
+	        	// Info voor de gebruiker
 	        	secondsLeft = Math.ceil(res.responseJSON.wait_seconds)
 	        	intervalId = setInterval( () => {
 	        		secondsLeft -= 10;
