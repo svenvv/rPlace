@@ -1,5 +1,5 @@
 var modhash = window.reddit.modhash;
-var currentVersion = 11;
+var currentVersion = 12;
 var drawingData = {
 	startX:50,
 	startY:0,
@@ -16,12 +16,13 @@ var currentY = 0;
 
 function start(){
 	updateGoal();
-	setInterval(updateGoal(), 300 * 1e3);
-	setTimeout(checkPixels(), 2000);
+	setInterval(() => updateGoal(), 120 * 1e3);
+	setTimeout(() => checkPixels(), 2000);
 }
 
 // Haalt de opdracht op van github
 function updateGoal() {
+	console.log("Updating target area... Ceterum censeo The Void esse delendam");
 	const url = 'https://raw.githubusercontent.com/Sadye/rPlace/master/data.json' + '?no-cache=' + (new Date).getTime();
 	//Hier komt later een functie om meerdere opdrachten te kunnen verdelen over gebruikers
 	fetch(url)
@@ -39,12 +40,14 @@ function updateGoal() {
 		}
 		if (drawingData.kill && !data.kill) {
 			// Script moet weer uitgevoerd worden nadat de killswitch was uitgevoerd
+			console.log("Script was restarted!");
 			setTimeout(checkPixels(), 2000);
 		}
 		drawingData.kill = data.kill;
 		// Neem een willekeurige x en y uit de teken-data
 		currentY = Math.floor(Math.random() * drawingData.colors.length);
 		currentX = Math.floor(Math.random() * drawingData.colors[currentY].length);
+		console.log("Succesfully acquired new target area");
 	})
 	.catch(function(error) {
 		console.log(error);
